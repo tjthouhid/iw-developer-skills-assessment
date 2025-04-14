@@ -1,4 +1,5 @@
-import { User, Pencil, Trash2, Search, ChevronDown } from 'lucide-react';
+import { User } from '@/types';
+import { User as UserIcon, Pencil, Trash2, Search, ChevronDown } from 'lucide-react';
 import  { useEffect, useState } from 'react';
 import { Pagination } from '@/components/ui/pagination';
 import axios from 'axios';
@@ -12,19 +13,33 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 
+interface Link {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+interface Meta {
+    from?: number;
+    to?: number;
+    total?: number;
+}
+
 export default function Index() {
 
-  const [users, setUsers] = useState([]);
-  const [search, setSearch] = useState('');
-  const [links, setLinks] = useState([]);
-  const [meta, setMeta] = useState({});
-  const [perPage, setPerPage] = useState(25); 
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
-  const [bulkOption, setBulkOption] = useState('select');
-  const [userToDelete, setUserToDelete] = useState<any | null>(null);
-  const [userToEdit, setUserToEdit] = useState<any | null>(null);
-  const [editForm, setEditForm] = useState({ name: '', email: '' });
+    const [users, setUsers] = useState<User[]>([]);
+    const [search, setSearch] = useState<string>('');;
+    const [links, setLinks] = useState<Link[]>([]);
+    const [meta, setMeta] = useState<Meta>({});
+    const [perPage, setPerPage] = useState<number>(25); 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+    const [bulkOption, setBulkOption] = useState<string>('select');
+    const [userToDelete, setUserToDelete] = useState<User | null>(null);
+    const [userToEdit, setUserToEdit] = useState<User | null>(null);
+    const [editForm, setEditForm] = useState<{ name: string; email: string }>({
+        name: '',
+        email: '',
+    });
 
   const toggleUser = (id: number) => {
     setSelectedUsers((prev) =>
@@ -215,7 +230,7 @@ export default function Index() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-            {users.map((user: any) => (
+            {users.map((user: User) => (
                 <tr key={user.id} className="hover:bg-gray-50 transition">
                   <td className="px-4 py-2">
                       <input
@@ -231,7 +246,7 @@ export default function Index() {
                           <img className="h-10 w-10 rounded-full object-cover" src={user.avatar} alt={user.name} />
                         ) : (
                           <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                            <User />
+                            <UserIcon />
                           </div>
                         )}
                       </div>
